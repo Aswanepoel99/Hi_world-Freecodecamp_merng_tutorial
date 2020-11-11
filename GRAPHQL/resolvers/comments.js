@@ -25,10 +25,10 @@ module.exports = {
                 await Post.save();
                 return Post;
             } else throw new UserInputError("Post not found")
-        }
-    }, 
+        },
+
     async deleteComment(_, { postId, commentId }, context) {
-        console.log(PostId, commentId)
+        console.log(postId, commentId)
         const { username } = checkAuth(context);
         const Post = await post.findById(postId);
         if (Post) {
@@ -45,4 +45,5 @@ module.exports = {
         }
 
     }
+}
 }
