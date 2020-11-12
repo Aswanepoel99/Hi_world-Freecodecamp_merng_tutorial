@@ -43,7 +43,6 @@ module.exports = {
             } else {
                 throw new UserInputError('Post not found')
             }
-
         }
     }
 }
