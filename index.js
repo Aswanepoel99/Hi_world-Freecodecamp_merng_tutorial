@@ -1,31 +1,24 @@
-//imports required packages
-const { ApolloServer } = require('apollo-server');
-//const gql = require('graphql-tag');
+const { ApolloServer, PubSub } = require('apollo-server');
 const mongoose = require('mongoose');
 
-//import config info
+const typeDefs = require('./graphql/typeDefs');
+const resolvers = require('./graphql/resolvers');
 const { MONGODB } = require('./config.js');
 
-//import models, typedefs,resolvers
-const post = require('./models/post')
-const User = require('./models/user')
-const typeDefs = require('./GRAPHQL/typeDefs');
-const resolvers = require('./GRAPHQL/resolvers')
+const pubsub = new PubSub();
 
-//creates apollo server object
 const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context: ({ req }) => ({ req })
+  typeDefs,
+  resolvers,
+  context: ({ req }) => ({ req, pubsub })
 });
 
-//connects to database
-mongoose.set('useNewUrlParser', true);
-mongoose.connect(MONGODB, { useUnifiedTopology: true })
-    .then(() => {
-        console.log('MongoDB Connected');
-        return server.listen({ port: 9001 });
-    })
-    .then(res => {
-        console.log(`server running at ${res.url} `)
-    })
+mongoose
+  .connect(MONGODB, { useNewUrlParser: true })
+  .then(() => {
+    console.log('MongoDB Connected');
+    return server.listen({ port: 5000 });
+  })
+  .then((res) => {
+    console.log(`Server running at ${res.url}`);
+  });
